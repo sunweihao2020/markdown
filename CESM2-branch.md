@@ -316,6 +316,36 @@ cp b1850_tx4_maritime_220624/run/*rpo* b1850_tx_maritime_h1_220629/run/
 cp b1850_tx4_maritime_220624/run/*.i.* b1850_tx_maritime_h1_220629/run/
 ```
 
+海洋性大陆实验重启h1 由于wgx服务器满了，这里转移到lym服务器上运行,由于是继续运行branch，所以依然命名为h1
+```shell
+./create_newcase --case b1850_tx_maritime_h1_220721 --res f09_t061 --compset B1850MOM --run-unsupported --compiler intel --mach oneapi
+cd b1850_tx_maritime_h1_220721
+./xmlchange NTASKS=-36
+./xmlchange RUN_REFCASE=b1850_tx_maritime_h1_220629
+./xmlchange RUN_REFDATE=0041-01-01
+./xmlchange RUN_TYPE=branch
+./xmlchange STOP_OPTION=nyears
+./xmlchange STOP_N=2
+./xmlchange RESUBMIT=30
+./xmlchange REST_N=2
+./xmlchange REST_OPTION=nyears
+./case.setup
+cp /public1/home/wgx/swh/cesm2.2.0/cime/scripts/b1850_tx_maritime_h1_220629/user_nl_cam .
+cp /public1/home/wgx/swh/cesm2.2.0/cime/scripts/b1850_tx_maritime_h1_220629/sbatch1.sh .
+cp /public1/home/wgx/swh/cesm2.2.0/cime/scripts/b1850_tx_maritime_h1_220629/user_nl_mom .
+cp /public1/home/wgx/swh/cesm2.2.0/cime/scripts/b1850_tx_maritime_h1_220629/user_nl_cice .
+./xmlchange ATM_DOMAIN_FILE='/public1/home/wgx/swh/cesm2.1.3/inputdata/share/domains/domain.lnd.fv09_125_t66_maritime3.220624.nc'
+./xmlchange LND_DOMAIN_FILE='/public1/home/wgx/swh/cesm2.1.3/inputdata/share/domains/domain.lnd.fv09_125_t66_maritime3.220624.nc'
+./xmlchange ICE_DOMAIN_FILE='/public1/home/wgx/swh/cesm2.1.3/inputdata/share/domains/domain.ocn.t66_maritime3.220624.nc'
+./xmlchange OCN_DOMAIN_FILE='/public1/home/wgx/swh/cesm2.1.3/inputdata/share/domains/domain.ocn.t66_maritime3.220624.nc'
+./xmlchange ATM2OCN_FMAPNAME='cpl/gridmaps/fv0.9x1.25/map_fv09_125_TO_t66_maritime3_aave.220624.nc'
+./xmlchange ATM2OCN_SMAPNAME='cpl/gridmaps/fv0.9x1.25/map_fv09_125_TO_t66_maritime3_blin.220624.nc'
+./xmlchange ATM2OCN_VMAPNAME='cpl/gridmaps/fv0.9x1.25/map_fv09_125_TO_t66_maritime3_patc.220624.nc'
+./xmlchange OCN2ATM_FMAPNAME='cpl/gridmaps/tx0.66v1/map_t66_maritime3_TO_fv09_125_aave.220624.nc'
+./xmlchange OCN2ATM_SMAPNAME='cpl/gridmaps/tx0.66v1/map_t66_maritime3_TO_fv09_125_aave.220624.nc'
+./case.build --skip-provenance-check
+```
+
 ## (三) 控制实验的重启
 
 实验名 b1850_control4_220624 享年 0097
